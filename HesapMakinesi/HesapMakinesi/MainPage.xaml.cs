@@ -11,9 +11,9 @@ namespace HesapMakinesi
     public partial class MainPage : ContentPage
     {
         int durum = 1;
-        string islem;
+        char islem;
         double ilkSayi = 0;
-       
+        double ikinciSayi = 0;
         public MainPage()
         {
             InitializeComponent();
@@ -24,12 +24,16 @@ namespace HesapMakinesi
         {
             Button button = (Button)sender;
             string tusDegeri = button.Text;
-
-            if (txtSonuc.Text == "0" && tusDegeri != ",") 
+            if (tusDegeri == "," && txtSonuc.Text.Split(islem)[0].Contains(",") && durum == 1) { return; }
+            if (tusDegeri == "," && txtSonuc.Text.Split(islem)[1].Contains(",") && durum == 2) { return; }
+            if (txtSonuc.Text == "0" && tusDegeri != "," || durum < 0 && tusDegeri != ",") 
             {
                 txtSonuc.Text = "";
+                if(durum < 0)
+                {
+                    durum *= -1;
+                }
             }
-            
             txtSonuc.Text += tusDegeri;
         }
 
@@ -46,7 +50,7 @@ namespace HesapMakinesi
             sayac++;
             Button button = (Button)sender;
             durum = 2;
-            string operand = button.Text;
+            char operand = button.Text.ToCharArray()[0];
             islem = operand;
             ilkSayi = Convert.ToDouble(txtSonuc.Text);
             if(sayac == 1)
@@ -59,22 +63,22 @@ namespace HesapMakinesi
         {
             if(durum == 2)
             {
-                double sonuc = Calculate(ilkSayi, islem);
+                double sonuc = Calculate(ilkSayi, islem, out ikinciSayi);
                 
                 txtSonuc.Text = sonuc.ToString("#,##0.0000");
                 if(txtSonuc.Text == "0,0000") { txtSonuc.Text = "0"; }
                 ilkSayi = sonuc;
-                durum = 1;
+                durum = -1;
                 sayac = 0;
             }
         }
-        public double Calculate(double ilkSayi, string operand)
+        public double Calculate(double ilkSayi, char operand, out double ikinciSayi)
         {
             double sonuc = 0;
-            double ikinciSayi = 0;
+            ikinciSayi = 0;
             switch (operand)
             {
-                case "÷":
+                case '÷':
                     ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('÷')[1]); //operand in sağında kalan sayıyı alır
                     sonuc = ilkSayi / ikinciSayi;
                     if(ikinciSayi == 0) { 
@@ -82,15 +86,15 @@ namespace HesapMakinesi
                         sonuc = 0;
                     }
                     break;
-                case "×":
+                case '×':
                     ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('×')[1]);
                     sonuc = ilkSayi * ikinciSayi;
                     break;
-                case "+":
+                case '+':
                     ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('+')[1]);
                     sonuc = ilkSayi + ikinciSayi;
                     break;
-                case "-":
+                case '-':
                     ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('-')[1]);
                     sonuc = ilkSayi - ikinciSayi;
                     break;
