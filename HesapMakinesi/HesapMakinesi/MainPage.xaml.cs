@@ -25,15 +25,12 @@ namespace HesapMakinesi
             Button button = (Button)sender;
             string tusDegeri = button.Text;
 
-            if (txtSonuc.Text == "0" && tusDegeri != ",")
+            if (txtSonuc.Text == "0" && tusDegeri != ",") 
             {
                 txtSonuc.Text = "";
             }
             
             txtSonuc.Text += tusDegeri;
-            
-                
-            
         }
 
         private void Temizle(object sender, EventArgs e)
@@ -43,7 +40,7 @@ namespace HesapMakinesi
             txtSonuc.Text = "0";
             sayac = 0;
         }
-        int sayac = 0;
+        int sayac = 0; //operand seçimi için kontrol
         private void IslemSec(object sender, EventArgs e)
         {
             sayac++;
@@ -78,7 +75,7 @@ namespace HesapMakinesi
             switch (operand)
             {
                 case "÷":
-                    ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('÷')[1]);
+                    ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('÷')[1]); //operand in sağında kalan sayıyı alır
                     sonuc = ilkSayi / ikinciSayi;
                     if(ikinciSayi == 0) { 
                         DisplayAlert("Hata", "Sayı sıfıra bölünemez.", "OK");
