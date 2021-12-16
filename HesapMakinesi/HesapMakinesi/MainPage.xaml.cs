@@ -23,15 +23,17 @@ namespace HesapMakinesi
         {
             Button button = (Button)sender;
             string tusDegeri = button.Text;
-            if(islem != default(char))
+            if (durum == 1 && tusDegeri == "," && txtSonuc.Text.Contains(",")) { return; }
+
+            if (tusDegeri == "," && durum == 2)
             {
-                if (tusDegeri == "," && txtSonuc.Text.Split(islem)[0].Contains(",") && durum == 1) { return; }
-                if (tusDegeri == "," && txtSonuc.Text.Split(islem)[1].Contains(",") && durum == 2) { return; }
+                if (txtSonuc.Text.Split(islem)[1].Contains(",")) { return; }
             }
-            if (txtSonuc.Text == "0" && tusDegeri != "," || durum < 0 && tusDegeri != ",") 
+
+            if (txtSonuc.Text == "0" && tusDegeri != "," || durum < 0 && tusDegeri != ",")
             {
                 txtSonuc.Text = "";
-                if(durum < 0)
+                if (durum < 0)
                 {
                     durum *= -1;
                 }
@@ -55,20 +57,20 @@ namespace HesapMakinesi
             char operand = button.Text.ToCharArray()[0];
             islem = operand;
             ilkSayi = Convert.ToDouble(txtSonuc.Text);
-            if(sayac == 1)
+            if (sayac == 1)
             {
                 txtSonuc.Text += operand;
             }
         }
-        
+
         private void IslemiTamamla(object sender, EventArgs e)
         {
-            if(durum == 2)
+            if (durum == 2)
             {
                 double sonuc = Calculate(ilkSayi, islem);
-                
-                txtSonuc.Text = sonuc.ToString("#,##0.0000");
-                if(txtSonuc.Text == "0,0000") { txtSonuc.Text = "0"; }
+
+                txtSonuc.Text = sonuc.ToString("#,##0.00");
+                if (txtSonuc.Text == "0,00") { txtSonuc.Text = "0"; }
                 ilkSayi = sonuc;
                 durum = -1; //işlem tamamlandıktan sonraki durum
                 sayac = 0;
@@ -81,23 +83,28 @@ namespace HesapMakinesi
             switch (operand)
             {
                 case '÷':
-                    ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('÷')[1]); //operand in sağında kalan sayıyı alır
+                    if (txtSonuc.Text.Split('÷').Length > 1)
+                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('÷')[1]); //operand in sağında kalan sayıyı alır
                     sonuc = ilkSayi / ikinciSayi;
-                    if(ikinciSayi == 0) { 
+                    if (ikinciSayi == 0)
+                    {
                         DisplayAlert("Hata", "Sayı sıfıra bölünemez.", "OK");
                         sonuc = 0;
                     }
                     break;
                 case '×':
-                    ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('×')[1]);
+                    if (txtSonuc.Text.Split('×').Length > 1)
+                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('×')[1]);
                     sonuc = ilkSayi * ikinciSayi;
                     break;
                 case '+':
-                    ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('+')[1]);
+                    if (txtSonuc.Text.Split('+').Length > 1)
+                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('+')[1]);
                     sonuc = ilkSayi + ikinciSayi;
                     break;
                 case '-':
-                    ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('-')[1]);
+                    if (txtSonuc.Text.Split('-').Length > 1)
+                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('-')[1]);
                     sonuc = ilkSayi - ikinciSayi;
                     break;
             }
