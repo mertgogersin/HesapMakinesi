@@ -23,7 +23,8 @@ namespace HesapMakinesi
         {
             Button button = (Button)sender;
             string tusDegeri = button.Text;
-            if (durum == 1 && tusDegeri == "," && txtSonuc.Text.Contains(",")) { return; }
+            if(durum == -1 && tusDegeri == ",") { txtSonuc.Text = "0,"; durum = 1; } //işlem bittikten sonra virgüle basılırsa
+            if (durum <= 1 && tusDegeri == "," && txtSonuc.Text.Contains(",")) { return; }
 
             if (tusDegeri == "," && durum == 2)
             {
@@ -56,9 +57,9 @@ namespace HesapMakinesi
             durum = 2; //ikinci sayı işlemi
             char operand = button.Text.ToCharArray()[0];
             islem = operand;
-            ilkSayi = Convert.ToDouble(txtSonuc.Text);
             if (sayac == 1)
             {
+                ilkSayi = Convert.ToDouble(txtSonuc.Text);
                 txtSonuc.Text += operand;
             }
         }
@@ -83,8 +84,7 @@ namespace HesapMakinesi
             switch (operand)
             {
                 case '÷':
-                    if (txtSonuc.Text.Split('÷').Length > 1)
-                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('÷')[1]); //operand in sağında kalan sayıyı alır
+                    ikinciSayi = txtSonuc.Text.Split('÷')[1] != "" ? Convert.ToDouble(txtSonuc.Text.Split('÷')[1]) : 0; //operand in sağında kalan sayıyı alır
                     sonuc = ilkSayi / ikinciSayi;
                     if (ikinciSayi == 0)
                     {
@@ -93,18 +93,15 @@ namespace HesapMakinesi
                     }
                     break;
                 case '×':
-                    if (txtSonuc.Text.Split('×').Length > 1)
-                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('×')[1]);
+                    ikinciSayi = txtSonuc.Text.Split('×')[1] != "" ? Convert.ToDouble(txtSonuc.Text.Split('×')[1]) : 0;
                     sonuc = ilkSayi * ikinciSayi;
                     break;
                 case '+':
-                    if (txtSonuc.Text.Split('+').Length > 1)
-                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('+')[1]);
+                    ikinciSayi = txtSonuc.Text.Split('+')[1] != "" ? Convert.ToDouble(txtSonuc.Text.Split('+')[1]) : 0;
                     sonuc = ilkSayi + ikinciSayi;
                     break;
                 case '-':
-                    if (txtSonuc.Text.Split('-').Length > 1)
-                        ikinciSayi = Convert.ToDouble(txtSonuc.Text.Split('-')[1]);
+                    ikinciSayi = txtSonuc.Text.Split('-')[1] != "" ? Convert.ToDouble(txtSonuc.Text.Split('-')[1]) : 0;
                     sonuc = ilkSayi - ikinciSayi;
                     break;
             }
